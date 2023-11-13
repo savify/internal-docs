@@ -10,4 +10,12 @@
         <description>Created after removal of "Getting started" from Internal Documentation</description>
         <accepts>Getting-started.html</accepts>
     </rule>
+    <rule id="3e835ead">
+        <description>Created after removal of "Backend Project" from Savify Internal Documentation</description>
+        <accepts>Backend-Project.html</accepts>
+    </rule>
+    <rule id="3a4d2ef">
+        <description>Created after removal of "Mobile Application" from Savify Internal Documentation</description>
+        <accepts>Mobile-Application.html</accepts>
+    </rule>
 </rules>
