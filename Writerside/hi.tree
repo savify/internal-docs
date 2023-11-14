@@ -9,6 +9,7 @@
     <toc-element topic="Backend-Development.md">
         <toc-element topic="Local-Development.md"/>
         <toc-element topic="Development-Process.md"/>
+        <toc-element topic="Testing.md"/>
         <toc-element topic="ADRs.md">
             <toc-element topic="0001-Use-Net-Core-as-a-main-technology.md"/>
         </toc-element>
