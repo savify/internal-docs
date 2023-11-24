@@ -1,0 +1,33 @@
+@startuml
+
+autonumber
+
+participant DomainEventsDispatcher
+participant DomainEventsAccessor
+participant DbContext
+queue EventBus
+participant Outbox
+
+
+DomainEventsDispatcher -> DomainEventsAccessor: Get all domain events
+activate DomainEventsDispatcher
+
+DomainEventsAccessor -> DbContext: Get changed entities
+activate DbContext
+activate DomainEventsAccessor
+DbContext --> DomainEventsAccessor: Entities scheduled to update
+deactivate DbContext
+DomainEventsAccessor -> DomainEventsAccessor: Get domain events from entities
+
+DomainEventsAccessor --> DomainEventsDispatcher: Domain events
+
+DomainEventsDispatcher -> DomainEventsDispatcher: Map domain events to notifications
+DomainEventsDispatcher -> DomainEventsAccessor: Clear all domain events
+deactivate DomainEventsAccessor
+
+DomainEventsDispatcher -> EventBus: Publish domain events [sync]
+
+DomainEventsDispatcher -> Outbox: Add notifications as Outbox messages
+deactivate DomainEventsDispatcher
+
+@enduml
