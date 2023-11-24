@@ -1,0 +1,53 @@
+@startuml C2 Container
+!include <C4/C4_Container>
+
+!define ICONS ./plantuml-icon-font-sprites
+!include ICONS/common.puml
+!include ICONS/font-awesome-5/wallet.puml
+!include ICONS/font-awesome-5/inbox.puml
+!include ICONS/font-awesome-5/university.puml
+!include ICONS/font-awesome-5/network_wired.puml
+!include ICONS/font-awesome-5/chart_line.puml
+!include ICONS/font-awesome-5/database.puml
+!include ICONS/font-awesome-5/server.puml
+!include ICONS/font-awesome-5/terminal.puml
+!include ICONS/font-awesome-5/archive.puml
+!include ICONS/font-awesome-5/mobile_alt.puml
+!include ICONS/font-awesome-5/desktop.puml
+
+Person(user, "User", "Uses 'Savify' application")
+Person(admin, "Admin", "Monitors and manages 'Savify' application")
+
+System_Boundary(c1, "Savify") {
+    Container(api, "Savify API", ".Net Core", "Application backend", $sprite="server")
+    Container(mobile_app, "Mobile application", "React Native", "GUI", $sprite="mobile_alt")
+    Container(admin_console, "Administration Console", "LowCode", "Application for Admins", $sprite="terminal")
+    ContainerDb(database, "Database", "PostgreSQL", "DB storage", $sprite="database")
+    Container(elastic, "ElasticSearch", "elastic", "Logging engine", $sprite="archive")
+    Container(kibana, "Kibana", "Kibana", "UI for ElasticSearch", $sprite="desktop")
+}
+
+System_Ext(email_server, "Email Server", "3rd party SMTP server", $sprite="inbox")
+System_Ext(tpp, "TPP", "Third-party provider", $sprite="network_wired")
+System_Ext(fdp, "FDP", "3rd party finance data provider", $sprite="chart_line")
+System_Ext(bank, "Bank", "User's bank", $sprite="university")
+
+Rel(user, mobile_app, "uses", "GUI")
+Rel(admin, admin_console, "uses", "GUI")
+Rel(user, bank, "Has account in")
+Rel(user, tpp, "Allows to access accounts data")
+Rel(email_server, user, "Sends emails to", "SMTP")
+
+Rel(mobile_app, api, "uses", "HTTP")
+Rel(admin_console, api, "uses", "HTTP")
+Rel(api, email_server, "Requests sending emails", "SMTP")
+Rel(api, tpp, "Gets user's account data from", "HTTP")
+Rel(api, fdp, "Gets stocks and cryptocurrencies data from", "HTTP")
+Rel(api, database, "Reads | Writes", "SQL")
+Rel(api, elastic, "Logs to", "HTTP")
+Rel(kibana, elastic, "Reads from")
+
+Rel(tpp, bank, "Connects to user's bank accounts")
+
+SHOW_LEGEND()
+@enduml

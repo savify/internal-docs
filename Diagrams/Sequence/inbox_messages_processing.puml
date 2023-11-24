@@ -1,0 +1,37 @@
+@startuml
+
+autonumber
+
+queue IntegrationEventBus
+participant IntegrationEventGenericHandler
+database Database
+control InboxProcessor
+queue EventBus
+
+activate IntegrationEventBus
+activate EventBus
+activate Database
+
+IntegrationEventBus -> IntegrationEventGenericHandler: IntegrationEvent
+activate IntegrationEventGenericHandler
+IntegrationEventGenericHandler -> Database: Save event to Inbox
+deactivate IntegrationEventGenericHandler
+
+loop Process Inbox Job
+    InboxProcessor -> Database: Get messages
+    activate InboxProcessor
+    Database --> InboxProcessor: Messages to process
+
+    loop Message Processing
+        InboxProcessor -> EventBus: Publish event
+        InboxProcessor -> Database: Set message as processed
+    end
+end
+
+
+deactivate IntegrationEventBus
+deactivate EventBus
+deactivate Database
+deactivate InboxProcessor
+
+@enduml

@@ -1,0 +1,36 @@
+@startuml
+
+autonumber
+
+control OutboxProcessor
+participant CommandHandler
+database Database
+queue EventBus
+
+activate CommandHandler
+activate Database
+activate EventBus
+
+group Transaction scope
+    CommandHandler -> Database: Start transaction
+    CommandHandler -> CommandHandler: Processing
+    CommandHandler -> Database: Save notifications to Outbox
+    CommandHandler -> Database: Commit transaction
+end
+
+deactivate CommandHandler
+
+loop Process Outbox Job
+    OutboxProcessor -> Database: Get messages
+
+    activate OutboxProcessor
+    Database --> OutboxProcessor: Messages to process
+    loop Messages Processing
+        OutboxProcessor -> EventBus: Send notification
+        OutboxProcessor -> Database: Set message as processed
+    end
+end
+
+deactivate Database
+deactivate EventBus
+@enduml

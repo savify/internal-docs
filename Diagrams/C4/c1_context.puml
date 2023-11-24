@@ -1,0 +1,32 @@
+@startuml C1 Context
+!include <C4/C4_Container>
+
+!define ICONS ./plantuml-icon-font-sprites
+!include ICONS/common.puml
+!include ICONS/font-awesome-5/wallet.puml
+!include ICONS/font-awesome-5/inbox.puml
+!include ICONS/font-awesome-5/university.puml
+!include ICONS/font-awesome-5/network_wired.puml
+!include ICONS/font-awesome-5/chart_line.puml
+
+Person(user, "User", "Uses 'Savify' application")
+Person(admin, "Admin", "Monitors and manages 'Savify' application")
+
+System(savify, "Savify", "Personal finance manager application", $sprite="wallet")
+System_Ext(email_server, "Email Server", "3rd party SMTP server", $sprite="inbox")
+System_Ext(tpp, "TPP", "Third-party provider", $sprite="network_wired")
+System_Ext(fdp, "FDP", "3rd party finance data provider", $sprite="chart_line")
+System_Ext(bank, "Bank", "User's bank", $sprite="university")
+
+Rel(email_server, user, "Sends emails to", "SMTP")
+Rel(savify, email_server, "Requests sending emails", "SMTP")
+Rel(user, savify, "Tracks expenses and incomes, plans budget, sets goals", "Mobile application")
+Rel(admin, savify, "Monitors and manages application", "Administration Console")
+Rel(user, bank, "Has account in")
+Rel(savify, tpp, "Gets user's account data from", "HTTP")
+Rel(savify, fdp, "Gets stocks and cryptocurrencies data from", "HTTP")
+Rel(user, tpp, "Allows to access accounts data")
+Rel(tpp, bank, "Connects to user's bank accounts")
+
+SHOW_LEGEND()
+@enduml

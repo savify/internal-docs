@@ -1,0 +1,20 @@
+@startuml
+
+autonumber
+
+participant UI
+participant API
+boundary Module
+participant QueryHandler
+database Database
+
+UI -> API: Read request
+API -> Module: ExecuteQuery<Result>(new Command())
+Module -> QueryHandler: Query
+QueryHandler -> Database: SQL
+Database --> QueryHandler: Result
+QueryHandler --> Module: DTO
+Module --> API: Result
+API --> UI: Response
+
+@enduml

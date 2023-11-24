@@ -1,0 +1,37 @@
+@startuml C3 Component
+!include <C4/C4_Component>
+
+!define ICONS ./plantuml-icon-font-sprites
+!include ICONS/font-awesome-5/mobile_alt.puml
+
+AddRelTag("async", $textColor = "$ARROW_FONT_COLOR", $lineColor = "$ARROW_COLOR",$lineStyle = DashedLine())
+
+System_Boundary(c1, "Savify") {
+    Container(mobile_app, "Mobile application", "React Native", "GUI", $sprite="mobile_alt")
+
+    Boundary(api, "Savify API") {
+        Component(web_api, "API", ".NET Core API")
+
+        Component(user_access, "UserAccess", "Module", "User authentication/authorisation & permissions")
+        Component(notifications, "Notifications", "Module", "Sending Emails & Notifications")
+        Component(wallets, "Wallets", "Module", "Wallets management")
+        Component(banks, "Banks", "Module", "Banks management")
+        Component(categories, "Categories", "Module", "Categories management")
+        Component(transactions, "Transactions", "Module", "Transactions management")
+    }
+}
+
+Rel_D(mobile_app, web_api, "Uses", "HTTP")
+Rel_D(web_api, user_access, "Uses")
+Rel_D(web_api, notifications, "Uses")
+Rel_D(web_api, wallets, "Uses")
+Rel_D(web_api, banks, "Uses")
+Rel_D(web_api, categories, "Uses")
+Rel_D(web_api, transactions, "Uses")
+
+Rel(user_access, notifications, "Initiates sending notifications", "async", $tags="async")
+BiRel(wallets, transactions, "Synchronises data with", "async", $tags="async")
+Rel(wallets, banks, "Get information about bank from", "sync")
+
+SHOW_LEGEND()
+@enduml

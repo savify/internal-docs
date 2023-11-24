@@ -1,0 +1,27 @@
+@startuml
+
+autonumber
+
+participant UI
+participant API
+boundary Module
+participant CommandHandler
+participant Repository
+database Database
+entity Aggregate
+
+UI -> API: Write request
+API -> Module: ExecuteCommand(new Command())
+Module -> CommandHandler: Command
+CommandHandler -> Repository: Get Aggregate
+Repository -> Database: SQL
+Database --> Repository: Result
+Repository --> CommandHandler: Aggregate
+CommandHandler -> Aggregate: Invoke domain method
+CommandHandler -> Repository: Save changes
+Repository -> Database: SQL
+CommandHandler --> Module: Result (if needed))
+Module --> API: Result (if needed))
+API --> UI: Response
+
+@enduml
