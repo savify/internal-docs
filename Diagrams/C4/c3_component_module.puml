@@ -1,0 +1,61 @@
+@startuml C3 Component - Module View (zoom-in)
+!include <C4/C4_Component>
+
+!define ICONS ./plantuml-icon-font-sprites
+!include ICONS/font-awesome-5/mobile_alt.puml
+
+AddElementTag("wallets", $fontColor = "#000000", $bgColor = "#05B8E6")
+AddElementTag("transactions", $fontColor = "#000000", $bgColor="#05E67E")
+AddElementTag("events_bus", $fontColor="#FFFFFF", $bgColor = "#0027EB")
+AddRelTag("async", $textColor = "$ARROW_FONT_COLOR", $lineColor = "$ARROW_COLOR",$lineStyle = DashedLine())
+
+System_Boundary(c1, "Savify") {
+    Boundary(api, "Savify API") {
+        Component(web_api, "API", ".NET Core API")
+
+        Boundary(wallets, "Wallets Module") {
+            Component(wallets_infrastructure, "Wallets.Infrastructure", ".NET Library", $tags="wallets")
+            Component(wallets_application, "Wallets.Application", ".NET Library", $tags="wallets")
+            Component(wallets_domain, "Wallets.Domain", ".NET Library", $tags="wallets")
+            Component(wallets_integration_events, "Wallets.IntegrationEvents", ".NET Library", $tags="wallets")
+            ComponentDb(wallets_data, "Wallets data", "database schema", $tags="wallets")
+        }
+
+        Boundary(transactions, "Transactions Module") {
+            Component(transactions_infrastructure, "Transactions.Infrastructure", ".NET Library", $tags="transactions")
+            Component(transactions_application, "Transactions.Application", ".NET Library", $tags="transactions")
+            Component(transactions_domain, "Transactions.Domain", ".NET Library", $tags="transactions")
+            Component(transactions_integration_events, "Transactions.IntegrationEvents", ".NET Library", $tags="transactions")
+            ComponentDb(transactions_data, "Transactions data", "database schema", $tags="transactions")
+        }
+
+        ComponentQueue(events_bus, "Events Bus", "In memory", $tags="events_bus")
+    }
+}
+
+Rel_D(web_api, wallets_application, "Uses")
+Rel_D(web_api, transactions_application, "Uses")
+Rel_D(web_api, wallets_infrastructure, "Uses")
+Rel_D(web_api, transactions_infrastructure, "Uses")
+
+
+Rel_U(wallets_application, wallets_domain, "Depends on")
+Rel(wallets_application, wallets_data, "Reads from", "SQL")
+Rel(wallets_application, wallets_integration_events, "Uses")
+Rel(wallets_application, transactions_integration_events, "Uses")
+Rel_U(wallets_infrastructure, wallets_application, "Depends on")
+Rel_U(wallets_infrastructure, wallets_domain, "Depends on")
+Rel(wallets_infrastructure, wallets_data, "Reads from | Writes to", "EntityFramework|SQL")
+Rel(wallets_infrastructure, events_bus, "Publish events to | subscribes on", "async", $tags="async")
+
+Rel_U(transactions_application, transactions_domain, "Depends on")
+Rel(transactions_application, transactions_data, "Reads from", "SQL")
+Rel(transactions_application, transactions_integration_events, "Uses")
+Rel(transactions_application, wallets_integration_events, "Uses")
+Rel_U(transactions_infrastructure, transactions_application, "Depends on")
+Rel_U(transactions_infrastructure, transactions_domain, "Depends on")
+Rel(transactions_infrastructure, transactions_data, "Reads from | Writes to", "EntityFramework|SQL")
+Rel(transactions_infrastructure, events_bus, "Publish events to | subscribes on", "async", $tags="async")
+
+SHOW_LEGEND()
+@enduml
