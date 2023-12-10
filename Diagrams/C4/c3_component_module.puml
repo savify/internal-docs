@@ -4,8 +4,8 @@
 !define ICONS ./plantuml-icon-font-sprites
 !include ICONS/font-awesome-5/mobile_alt.puml
 
-AddElementTag("wallets", $fontColor = "#000000", $bgColor = "#05B8E6")
-AddElementTag("transactions", $fontColor = "#000000", $bgColor="#05E67E")
+AddElementTag("finance_tracking", $fontColor = "#000000", $bgColor = "#05B8E6")
+AddElementTag("banks", $fontColor = "#000000", $bgColor="#05E67E")
 AddElementTag("events_bus", $fontColor="#FFFFFF", $bgColor = "#0027EB")
 AddRelTag("async", $textColor = "$ARROW_FONT_COLOR", $lineColor = "$ARROW_COLOR",$lineStyle = DashedLine())
 
@@ -13,49 +13,49 @@ System_Boundary(c1, "Savify") {
     Boundary(api, "Savify API") {
         Component(web_api, "API", ".NET Core API")
 
-        Boundary(wallets, "Wallets Module") {
-            Component(wallets_infrastructure, "Wallets.Infrastructure", ".NET Library", $tags="wallets")
-            Component(wallets_application, "Wallets.Application", ".NET Library", $tags="wallets")
-            Component(wallets_domain, "Wallets.Domain", ".NET Library", $tags="wallets")
-            Component(wallets_integration_events, "Wallets.IntegrationEvents", ".NET Library", $tags="wallets")
-            ComponentDb(wallets_data, "Wallets data", "database schema", $tags="wallets")
+        Boundary(finance_tracking, "Finance Tracking Module") {
+            Component(finance_tracking_infrastructure, "FinanceTracking.Infrastructure", ".NET Library", $tags="finance_tracking")
+            Component(finance_tracking_application, "FinanceTracking.Application", ".NET Library", $tags="finance_tracking")
+            Component(finance_tracking_domain, "FinanceTracking.Domain", ".NET Library", $tags="finance_tracking")
+            Component(finance_tracking_integration_events, "FinanceTracking.IntegrationEvents", ".NET Library", $tags="finance_tracking")
+            ComponentDb(finance_tracking_data, "FinanceTracking data", "database schema", $tags="finance_tracking")
         }
 
-        Boundary(transactions, "Transactions Module") {
-            Component(transactions_infrastructure, "Transactions.Infrastructure", ".NET Library", $tags="transactions")
-            Component(transactions_application, "Transactions.Application", ".NET Library", $tags="transactions")
-            Component(transactions_domain, "Transactions.Domain", ".NET Library", $tags="transactions")
-            Component(transactions_integration_events, "Transactions.IntegrationEvents", ".NET Library", $tags="transactions")
-            ComponentDb(transactions_data, "Transactions data", "database schema", $tags="transactions")
+        Boundary(banks, "Banks Module") {
+            Component(banks_infrastructure, "Banks.Infrastructure", ".NET Library", $tags="banks")
+            Component(banks_application, "Banks.Application", ".NET Library", $tags="banks")
+            Component(banks_domain, "Banks.Domain", ".NET Library", $tags="banks")
+            Component(banks_integration_events, "Banks.IntegrationEvents", ".NET Library", $tags="banks")
+            ComponentDb(banks_data, "Banks data", "database schema", $tags="banks")
         }
 
         ComponentQueue(events_bus, "Events Bus", "In memory", $tags="events_bus")
     }
 }
 
-Rel_D(web_api, wallets_application, "Uses")
-Rel_D(web_api, transactions_application, "Uses")
-Rel_D(web_api, wallets_infrastructure, "Uses")
-Rel_D(web_api, transactions_infrastructure, "Uses")
+Rel_D(web_api, finance_tracking_application, "Uses")
+Rel_D(web_api, banks_application, "Uses")
+Rel_D(web_api, finance_tracking_infrastructure, "Uses")
+Rel_D(web_api, banks_infrastructure, "Uses")
 
 
-Rel_U(wallets_application, wallets_domain, "Depends on")
-Rel(wallets_application, wallets_data, "Reads from", "SQL")
-Rel(wallets_application, wallets_integration_events, "Uses")
-Rel(wallets_application, transactions_integration_events, "Uses")
-Rel_U(wallets_infrastructure, wallets_application, "Depends on")
-Rel_U(wallets_infrastructure, wallets_domain, "Depends on")
-Rel(wallets_infrastructure, wallets_data, "Reads from | Writes to", "EntityFramework|SQL")
-Rel(wallets_infrastructure, events_bus, "Publish events to | subscribes on", "async", $tags="async")
+Rel_U(finance_tracking_application, finance_tracking_domain, "Depends on")
+Rel(finance_tracking_application, finance_tracking_data, "Reads from", "SQL")
+Rel(finance_tracking_application, finance_tracking_integration_events, "Uses")
+Rel(finance_tracking_application, banks_integration_events, "Uses")
+Rel_U(finance_tracking_infrastructure, finance_tracking_application, "Depends on")
+Rel_U(finance_tracking_infrastructure, finance_tracking_domain, "Depends on")
+Rel(finance_tracking_infrastructure, finance_tracking_data, "Reads from | Writes to", "EntityFramework|SQL")
+Rel(finance_tracking_infrastructure, events_bus, "Publish events to | subscribes on", "async", $tags="async")
 
-Rel_U(transactions_application, transactions_domain, "Depends on")
-Rel(transactions_application, transactions_data, "Reads from", "SQL")
-Rel(transactions_application, transactions_integration_events, "Uses")
-Rel(transactions_application, wallets_integration_events, "Uses")
-Rel_U(transactions_infrastructure, transactions_application, "Depends on")
-Rel_U(transactions_infrastructure, transactions_domain, "Depends on")
-Rel(transactions_infrastructure, transactions_data, "Reads from | Writes to", "EntityFramework|SQL")
-Rel(transactions_infrastructure, events_bus, "Publish events to | subscribes on", "async", $tags="async")
+Rel_U(banks_application, banks_domain, "Depends on")
+Rel(banks_application, banks_data, "Reads from", "SQL")
+Rel(banks_application, banks_integration_events, "Uses")
+Rel(banks_application, finance_tracking_integration_events, "Uses")
+Rel_U(banks_infrastructure, banks_application, "Depends on")
+Rel_U(banks_infrastructure, banks_domain, "Depends on")
+Rel(banks_infrastructure, banks_data, "Reads from | Writes to", "EntityFramework|SQL")
+Rel(banks_infrastructure, events_bus, "Publish events to | subscribes on", "async", $tags="async")
 
 SHOW_LEGEND()
 @enduml
