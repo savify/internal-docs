@@ -14,24 +14,21 @@ System_Boundary(c1, "Savify") {
 
         Component(user_access, "UserAccess", "Module", "User authentication/authorisation & permissions")
         Component(notifications, "Notifications", "Module", "Sending Emails & Notifications")
-        Component(wallets, "Wallets", "Module", "Wallets management")
+        Component(finance_tracking, "Finance Tracking", "Module", "Core domain functionality")
         Component(banks, "Banks", "Module", "Banks management")
         Component(categories, "Categories", "Module", "Categories management")
-        Component(transactions, "Transactions", "Module", "Transactions management")
     }
 }
 
 Rel_D(mobile_app, web_api, "Uses", "HTTP")
 Rel_D(web_api, user_access, "Uses")
 Rel_D(web_api, notifications, "Uses")
-Rel_D(web_api, wallets, "Uses")
+Rel_D(web_api, finance_tracking, "Uses")
 Rel_D(web_api, banks, "Uses")
 Rel_D(web_api, categories, "Uses")
-Rel_D(web_api, transactions, "Uses")
 
 Rel(user_access, notifications, "Initiates sending notifications", "async", $tags="async")
-BiRel(wallets, transactions, "Synchronises data with", "async", $tags="async")
-Rel(wallets, banks, "Get information about bank from", "sync")
+Rel(finance_tracking, banks, "Get information about bank from", "sync")
 
 SHOW_LEGEND()
 @enduml

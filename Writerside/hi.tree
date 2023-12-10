@@ -6,6 +6,7 @@
                  start-page="">
 
     <toc-element topic="Getting-started.md"/>
+    <toc-element topic="Domain-Model.md"/>
     <toc-element topic="Backend-Development.md">
         <toc-element topic="Architecture.md">
             <toc-element topic="C4-Diagrams.md"/>
