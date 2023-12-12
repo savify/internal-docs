@@ -44,13 +44,6 @@ Each test can have 2 possible outcomes:
 We **DON'T** mock dependencies on which we have full control (e.g. database). And we mock dependencies that we don't have
 control on (such as external API or SMTP server).
 
-To run integration tests:
-1. Run migrations on test database to ensure database schemas:
-    ```bash
-    make test-db-update
-    ```
-2. Ensure that `TestSettings.runsettings` configuration file is used during running integration tests.
-
 Each module has its own `TestBase` class that contains basic logic for preparing tests and tearing down after execution.
 
 During one-time set up the next steps are executed:
